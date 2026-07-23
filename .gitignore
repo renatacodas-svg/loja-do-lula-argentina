@@ -1,0 +1,22 @@
+# Dependências e builds gerados
+node_modules/
+.pnpm-store/
+.next/
+out/
+dist/
+
+# Segredos e configurações locais
+.env*
+!.env.example
+
+# Logs e caches
+*.log
+*.tsbuildinfo
+.vercel/
+
+# Arquivos do sistema/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.split-work/
