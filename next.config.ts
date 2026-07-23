@@ -17,7 +17,6 @@ const contentSecurityPolicy = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
-  distDir: "build-output",
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "**.supabase.co" },
