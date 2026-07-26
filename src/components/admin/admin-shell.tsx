@@ -169,9 +169,9 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
       setMessage("Modo demo: configure Supabase para login real. As mudanças ficam só nesta sessão.");
       return;
     }
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
     if (error) {
-      setMessage("Não foi possível entrar. Confira o e-mail e a senha e tente novamente.");
+      setMessage(`Não foi possível entrar: ${error.message}`);
       return;
     }
     setIsLogged(true);
