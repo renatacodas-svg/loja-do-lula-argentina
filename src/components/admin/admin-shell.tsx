@@ -107,6 +107,7 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
   const hasSupabase = Boolean(supabase);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [active, setActive] = useState<Tab>("dashboard");
@@ -369,7 +370,16 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
         <div className="grid gap-4 rounded-lg bg-white p-5 shadow-soft">
           {message ? <p className="rounded-md bg-yellow-50 p-3 text-sm font-bold">{message}</p> : null}
           <AdminInput label="E-mail" value={email} onChange={setEmail} />
-          <AdminInput label="Senha" type="password" value={password} onChange={setPassword} />
+          <AdminInput label="Senha" type={showPassword ? "text" : "password"} value={password} onChange={setPassword} />
+          <label className="flex cursor-pointer items-center gap-2 text-sm font-bold">
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={(event) => setShowPassword(event.target.checked)}
+              className="h-4 w-4 accent-lulaRed"
+            />
+            Ver senha
+          </label>
           <button onClick={login} className="focus-ring min-h-12 rounded-md bg-lulaRed font-black text-white">Entrar</button>
         </div>
       </section>
