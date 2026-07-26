@@ -18,7 +18,7 @@ Copie `.env.example` para `.env.local` e configure:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_SITE_URL`
-- `STORE_TEAM_EMAIL` — atualmente `Luladolula13@gmail.com`
+- `STORE_TEAM_EMAIL` — atualmente `lojadolula.13@gmail.com`
 - `RESEND_API_KEY`
 - `STORE_RESEND_FROM_EMAIL`
 - chaves do Cloudflare Turnstile

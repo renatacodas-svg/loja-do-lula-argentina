@@ -16,7 +16,7 @@ export default function PrivacidadePage() {
         <div className="mt-8 space-y-7 text-base leading-7 text-zinc-700">
           <section>
             <h2 className="text-xl font-black text-zinc-950">1. Responsável e contato</h2>
-            <p className="mt-2">A Loja do Lula Argentina é responsável pelo tratamento dos dados enviados neste site. Dúvidas, pedidos de correção ou exclusão podem ser enviados para <a className="font-bold text-brasilBlue" href="mailto:Luladolula13@gmail.com">Luladolula13@gmail.com</a>.</p>
+            <p className="mt-2">A Loja do Lula Argentina é responsável pelo tratamento dos dados enviados neste site. Dúvidas, pedidos de correção ou exclusão podem ser enviados para <a className="font-bold text-brasilBlue" href="mailto:lojadolula.13@gmail.com">lojadolula.13@gmail.com</a>.</p>
           </section>
           <section>
             <h2 className="text-xl font-black text-zinc-950">2. Dados coletados</h2>
