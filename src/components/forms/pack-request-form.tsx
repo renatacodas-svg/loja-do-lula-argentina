@@ -72,7 +72,7 @@ export function PackRequestForm() {
       {state === "error" ? <p className="rounded-md bg-red-50 p-3 text-sm font-bold text-red-800">{message}</p> : null}
       <div className="grid gap-4 md:grid-cols-2">
         <label className="grid gap-2 text-sm font-bold">Nome da pessoa responsável<input required maxLength={120} name="responsible_name" className="focus-ring rounded-md border px-3 py-3" /></label>
-        <label className="grid gap-2 text-sm font-bold">WhatsApp<input required maxLength={40} name="whatsapp" className="focus-ring rounded-md border px-3 py-3" /></label>
+        <label className="grid gap-2 text-sm font-bold">WhatsApp (opcional)<input maxLength={40} name="whatsapp" className="focus-ring rounded-md border px-3 py-3" /></label>
         <label className="grid gap-2 text-sm font-bold">E-mail<input required maxLength={254} type="email" name="email" className="focus-ring rounded-md border px-3 py-3" /></label>
         <label className="grid gap-2 text-sm font-bold">Cidade<input required maxLength={120} name="city" className="focus-ring rounded-md border px-3 py-3" /></label>
       </div>
