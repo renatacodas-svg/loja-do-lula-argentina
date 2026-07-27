@@ -217,6 +217,26 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
     await refresh();
   }
 
+  async function requestPasswordReset() {
+    setMessage("");
+    if (!supabase) {
+      setMessage("A conexão com o serviço de acesso não está configurada.");
+      return;
+    }
+    if (!email.trim()) {
+      setMessage("Digite o e-mail do Admin antes de solicitar uma nova senha.");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/redefinir-senha`
+    });
+    if (error) {
+      setMessage(`Não foi possível enviar a recuperação: ${error.message}`);
+      return;
+    }
+    setMessage("Enviamos um novo link para redefinir a senha. Confira também Spam e Promoções.");
+  }
+
   async function logout() {
     setMessage("");
     if (supabase) {
@@ -443,6 +463,7 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
             />
             Ver senha
           </label>
+          <button type="button" onClick={() => void requestPasswordReset()} className="text-left text-sm font-black text-brasilBlue underline">Esqueci minha senha</button>
           <button onClick={login} className="focus-ring min-h-12 rounded-md bg-lulaRed font-black text-white">Entrar</button>
         </div>
       </section>
