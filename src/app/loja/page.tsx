@@ -1,3 +1,4 @@
+import { ButtonLink } from "@/components/ui";
 import { StoreFeaturedProducts } from "@/components/store-featured-products";
 import { getProducts } from "@/lib/data";
 
@@ -8,6 +9,13 @@ const howItWorks = [
   ["Envie sua reserva", "Preencha seus dados, cidade, quantidade e preferências.", "/loja-assets/icon-document-arrow.png"],
   ["A equipe confirma", "Confirmamos estoque, forma de pagamento e entrega.", "/loja-assets/icon-check-seal.png"],
   ["Receba seu pedido", "Combinamos a entrega para que os produtos cheguem até você.", "/loja-assets/icon-circulation-box.png"]
+] as const;
+
+const packs = [
+  ["Pack 250K", "Para apoiar a circulação inicial de materiais.", "250K", "/loja-assets/icon-basket.png"],
+  ["Pack 500K", "Para fortalecer atividades, encontros e distribuição comunitária.", "500K", "/loja-assets/icon-community-pack.png"],
+  ["Pack 1 milhão", "Para grupos ou redes que querem organizar uma ação de maior alcance.", "1 milhão", "/loja-assets/icon-pack-box.png"],
+  ["Outro valor", "Quer conversar sobre outro valor ou formato? Envie uma mensagem para a equipe.", "Conversar", "/loja-assets/icon-community-pack.png"]
 ] as const;
 
 function LojaAssetIcon({ src, alt, className = "h-14 w-14" }: { src: string; alt: string; className?: string }) {
@@ -71,6 +79,33 @@ export default async function LojaPage() {
         </section>
 
         <StoreFeaturedProducts products={products} />
+
+        <section id="packs" className="scroll-mt-32 py-12">
+          <div className="relative overflow-hidden rounded-lg border border-ink/10 bg-[#FEFCCC] px-5 py-8 shadow-sm md:px-8 md:py-10">
+            <div className="relative max-w-3xl">
+              <p className="text-sm font-black uppercase tracking-wide text-lulaRed">Apoio coletivo</p>
+              <h2 className="loja-title mt-2 text-4xl font-black text-brasilGreen md:text-6xl">Packs de apoio</h2>
+              <p className="mt-4 max-w-2xl text-base font-bold leading-7 text-ink/78">
+                Escolha um valor de referência e envie uma mensagem. A equipe ajuda a pensar a composição do pack e combina os próximos passos diretamente com você.
+              </p>
+            </div>
+            <div className="relative mt-8 grid gap-5 md:grid-cols-4">
+              {packs.map(([title, text, value, icon]) => (
+                <article key={title} className="flex min-h-[23rem] flex-col rounded-lg border border-ink/15 bg-[#FEFCCC] p-6 text-center shadow-sm">
+                  <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-lulaYellow/30">
+                    <LojaAssetIcon src={icon} alt="" className="h-20 w-20" />
+                  </div>
+                  <h3 className="loja-title mt-5 text-3xl font-black text-ink">{title}</h3>
+                  <p className="mt-5 flex-1 text-base font-bold leading-7 text-ink/78">{text}</p>
+                  <p className="mx-auto mt-5 inline-flex min-w-28 items-center justify-center rounded-full bg-brasilBlue px-5 py-3 text-xl font-black text-white shadow-sm">{value}</p>
+                  <div className="mt-6">
+                    <ButtonLink href={`/packs-de-apoio?pack=${encodeURIComponent(title === "Outro valor" ? "Quero conversar sobre outro valor" : title.replace("Pack ", "Pack Apoio "))}`} variant="secondary">Pedir pack</ButtonLink>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <section className="mt-8 rounded-lg border border-ink/10 bg-white/70 p-4 text-sm font-bold leading-6 text-zinc-700">
           A equipe da Loja do Lula confirma cada solicitação, a disponibilidade dos produtos, a forma de pagamento e a entrega antes de concluir a compra.

@@ -6,7 +6,7 @@ import { posts, products, publications } from "@/lib/mock-data";
 import { createClient } from "@/lib/supabase";
 import { Post, Product, Publication } from "@/lib/types";
 
-type Tab = "dashboard" | "products" | "posts" | "publications" | "orders" | "contacts" | "setup";
+type Tab = "dashboard" | "products" | "posts" | "publications" | "orders" | "packs" | "contacts" | "setup";
 type AdminMode = "nucleus" | "store";
 
 type OrderRow = {
@@ -31,6 +31,20 @@ type ContactRow = {
   whatsapp?: string;
   message: string;
   status: string;
+  created_at: string;
+};
+
+type PackRequestRow = {
+  id: string;
+  responsible_name: string;
+  whatsapp: string;
+  email: string;
+  city: string;
+  amount_reference: string;
+  support_type: string;
+  notes?: string;
+  status: string;
+  internal_notes?: string;
   created_at: string;
 };
 
@@ -115,6 +129,7 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
   const [activityItems, setActivityItems] = useState<Post[]>(hasSupabase ? [] : posts);
   const [publicationItems, setPublicationItems] = useState<Publication[]>(hasSupabase ? [] : publications);
   const [orders, setOrders] = useState<OrderRow[]>([]);
+  const [packRequests, setPackRequests] = useState<PackRequestRow[]>([]);
   const [contacts, setContacts] = useState<ContactRow[]>([]);
   const [message, setMessage] = useState("");
   const [postDraftVersion, setPostDraftVersion] = useState(0);
@@ -138,14 +153,17 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
     if (!supabase) return;
     const failedSections: string[] = [];
     if (mode === "store") {
-      const [productResult, orderResult] = await Promise.all([
+      const [productResult, orderResult, packResult] = await Promise.all([
         supabase.from("products").select("*").order("created_at", { ascending: false }),
-        supabase.from("orders").select("*").order("created_at", { ascending: false })
+        supabase.from("orders").select("*").order("created_at", { ascending: false }),
+        supabase.from("pack_requests").select("*").order("created_at", { ascending: false })
       ]);
       setItems((productResult.data ?? []) as Product[]);
       if (orderResult.data) setOrders(orderResult.data as OrderRow[]);
+      if (packResult.data) setPackRequests(packResult.data as PackRequestRow[]);
       if (productResult.error) failedSections.push("produtos");
       if (orderResult.error) failedSections.push("reservas");
+      if (packResult.error) failedSections.push("pedidos de packs");
     } else {
       const [postResult, publicationResult, contactResult] = await Promise.all([
         supabase.from("posts").select("*").order("date", { ascending: false }),
@@ -361,6 +379,18 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
     setMessage(status === "lido" ? "Mensagem marcada como lida com sucesso." : "Mensagem marcada como nova com sucesso.");
   }
 
+  async function updatePackRequest(id: string, status: string, internal_notes: string) {
+    setMessage("");
+    if (!supabase) return;
+    const { error } = await supabase.from("pack_requests").update({ status, internal_notes }).eq("id", id);
+    if (error) {
+      setMessage(friendlyError(error, "pedido de pack"));
+      return;
+    }
+    setPackRequests((current) => current.map((request) => request.id === id ? { ...request, status, internal_notes } : request));
+    setMessage("Pedido de pack atualizado com sucesso.");
+  }
+
   if (!sessionReady) return <div className="mx-auto max-w-4xl px-4 py-14">Carregando...</div>;
 
   if (!isLogged) {
@@ -406,11 +436,11 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
       </div>
       <div className="mb-6 flex flex-wrap gap-2">
         {(mode === "store"
-          ? (["dashboard", "products", "orders", "setup"] as const)
+          ? (["dashboard", "products", "orders", "packs", "setup"] as const)
           : (["dashboard", "posts", "publications", "contacts", "setup"] as const)
         ).map((tab) => (
           <button key={tab} onClick={() => setActive(tab)} className={`rounded-md px-4 py-2 text-sm font-black ${active === tab ? "bg-lulaRed text-white" : "bg-white"}`}>
-            {tab === "dashboard" ? "Dashboard" : tab === "products" ? "Produtos" : tab === "posts" ? "Atividades" : tab === "publications" ? "Publicações" : tab === "orders" ? "Reservas" : tab === "contacts" ? "Mensagens" : "Configuração"}
+            {tab === "dashboard" ? "Dashboard" : tab === "products" ? "Produtos" : tab === "posts" ? "Atividades" : tab === "publications" ? "Publicações" : tab === "orders" ? "Reservas" : tab === "packs" ? "Pedidos de packs" : tab === "contacts" ? "Mensagens" : "Configuração"}
           </button>
         ))}
       </div>
@@ -420,6 +450,7 @@ export function AdminShell({ mode = "nucleus" }: { mode?: AdminMode }) {
       {active === "posts" ? <PostsAdmin posts={activityItems} draftVersion={postDraftVersion} savePost={savePost} removePost={(id, label) => removeItem("posts", id, label)} /> : null}
       {active === "publications" ? <PublicationsAdmin publications={publicationItems} draftVersion={publicationDraftVersion} savePublication={savePublication} removePublication={(id, label) => removeItem("publications", id, label)} /> : null}
       {active === "orders" ? <OrdersAdmin orders={orders} updateOrder={updateOrder} /> : null}
+      {active === "packs" ? <PackRequestsAdmin requests={packRequests} updateRequest={updatePackRequest} /> : null}
       {active === "contacts" ? <ContactsAdmin contacts={contacts} updateStatus={updateContactStatus} /> : null}
       {active === "setup" ? <SetupAdmin hasSupabase={hasSupabase} /> : null}
     </section>
@@ -713,6 +744,37 @@ function OrdersAdmin({ orders, updateOrder }: { orders: OrderRow[]; updateOrder:
           </div>
           <textarea name="internal_notes" defaultValue={order.internal_notes ?? ""} placeholder="Notas internas da equipe" className="focus-ring mt-3 w-full rounded-md border px-3 py-3" />
           <button className="focus-ring mt-3 rounded-md bg-brasilBlue px-4 py-2 text-sm font-black text-white">Salvar status e nota</button>
+        </form>
+      ))}
+    </div>
+  );
+}
+
+function PackRequestsAdmin({ requests, updateRequest }: { requests: PackRequestRow[]; updateRequest: (id: string, status: string, notes: string) => void }) {
+  if (!requests.length) return <div className="rounded-lg bg-white p-6 shadow-soft">Ainda não há pedidos de packs no banco.</div>;
+  const statusLabels: Record<string, string> = { novo: "Novo", em_contato: "Em contato", encerrado: "Encerrado" };
+
+  return (
+    <div className="grid gap-4">
+      {requests.map((request) => (
+        <form key={request.id} action={(data) => updateRequest(request.id, String(data.get("status")), String(data.get("internal_notes")))} className="rounded-lg bg-white p-5 shadow-soft">
+          <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+            <div>
+              <h3 className="text-lg font-black">{request.amount_reference}</h3>
+              <p className="text-sm leading-6 text-zinc-600">{request.responsible_name} · {request.city}</p>
+              <p className="text-sm leading-6 text-zinc-600">{request.email} · {request.whatsapp}</p>
+              <p className="mt-2 text-sm font-bold text-zinc-700">{request.support_type}</p>
+              {request.notes ? <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-zinc-600">{request.notes}</p> : null}
+              <p className="mt-2 text-xs font-bold uppercase text-zinc-500">{new Date(request.created_at).toLocaleString("pt-BR")} · {statusLabels[request.status] ?? request.status}</p>
+            </div>
+            <select name="status" defaultValue={request.status} className="focus-ring rounded-md border px-3 py-2">
+              <option value="novo">Novo</option>
+              <option value="em_contato">Em contato</option>
+              <option value="encerrado">Encerrado</option>
+            </select>
+          </div>
+          <textarea name="internal_notes" defaultValue={request.internal_notes ?? ""} placeholder="Notas internas da equipe" className="focus-ring mt-3 w-full rounded-md border px-3 py-3" />
+          <button className="focus-ring mt-3 rounded-md bg-brasilBlue px-4 py-2 text-sm font-black text-white">Salvar acompanhamento</button>
         </form>
       ))}
     </div>

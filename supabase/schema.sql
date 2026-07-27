@@ -53,6 +53,21 @@ create table if not exists public.form_rate_limits (
   window_started timestamptz not null default now()
 );
 
+create table if not exists public.pack_requests (
+  id uuid primary key default gen_random_uuid(),
+  responsible_name text not null,
+  whatsapp text not null,
+  email text not null,
+  city text not null,
+  amount_reference text not null,
+  support_type text not null,
+  notes text,
+  status text not null default 'novo' check (status in ('novo', 'em_contato', 'encerrado')),
+  internal_notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create or replace function public.is_admin()
 returns boolean
 language sql
@@ -70,6 +85,7 @@ alter table public.profiles enable row level security;
 alter table public.products enable row level security;
 alter table public.orders enable row level security;
 alter table public.form_rate_limits enable row level security;
+alter table public.pack_requests enable row level security;
 
 create policy "public read products" on public.products for select using (true);
 create policy "admin all products" on public.products for all to authenticated using ((select public.is_admin())) with check ((select public.is_admin()));
@@ -77,6 +93,11 @@ create policy "admin all orders" on public.orders for all to authenticated using
 create policy "admin own profile" on public.profiles for select to authenticated using (id = auth.uid());
 
 revoke all on table public.form_rate_limits from anon, authenticated;
+
+create policy "admin all pack requests"
+on public.pack_requests for all to authenticated
+using ((select public.is_admin()))
+with check ((select public.is_admin()));
 
 insert into storage.buckets (id, name, public)
 values ('site-assets', 'site-assets', true)
