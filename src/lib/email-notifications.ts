@@ -6,6 +6,8 @@ const kindTitles: Record<string, string> = {
   contacts: "Nova mensagem de contato"
 };
 
+const storeTeamEmail = "lojadolula.13@gmail.com";
+
 const fieldLabels: Record<string, string> = {
   product_name_snapshot: "Produto",
   variation: "Tamanho/variação",
@@ -52,7 +54,7 @@ export async function sendFormNotification(kind: string, payload: Record<string,
   const apiKey = process.env.RESEND_API_KEY;
   const isStoreMessage = kind === "orders" || kind === "pack_requests";
   const recipientList = isStoreMessage
-    ? process.env.STORE_TEAM_EMAIL
+    ? storeTeamEmail
     : process.env.TEAM_EMAIL;
   const recipients = (recipientList ?? "")
     .split(",")
