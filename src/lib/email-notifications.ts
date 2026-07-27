@@ -7,7 +7,7 @@ const kindTitles: Record<string, string> = {
   contacts: "Nova mensagem de contato"
 };
 
-const storeTeamEmail = "lojadolula.13@gmail.com";
+const storeTeamEmail = "lojadolula13@gmail.com";
 
 const fieldLabels: Record<string, string> = {
   product_name_snapshot: "Produto",
