@@ -640,7 +640,7 @@ function ProductForm({ title, product, saveProduct, removeProduct, onSaved, feat
 
       <fieldset className="grid gap-3 rounded-lg border border-zinc-200 p-4">
         <legend className="px-1 text-sm font-black text-zinc-700">Preço, estoque e status</legend>
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-3">
           <AdminInput name="price_ars" label="Preço em pesos argentinos (ARS) *" type="number" defaultValue={product?.price_ars} required hint="Digite só números, sem ponto nem símbolo de moeda." />
           <AdminInput name="stock_quantity" label="Estoque *" type="number" defaultValue={product?.stock_quantity} required hint="Quantidade disponível para reservar." />
           <AdminInput name="low_stock_threshold" label="Alerta de estoque baixo *" type="number" defaultValue={product?.low_stock_threshold ?? 5} required hint="Quando o estoque chegar nesse número, entra no alerta do dashboard." />
