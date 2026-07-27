@@ -1,6 +1,7 @@
 const kindTitles: Record<string, string> = {
   orders: "Nova reserva da Loja do Lula",
   pack_requests: "Novo pedido de pack de apoio",
+  sales_point_requests: "Novo interesse em ponto de venda",
   support_packs: "Novo interesse em pack de apoio",
   nudos: "Novo cadastro de ponto de apoio",
   contacts: "Nova mensagem de contato"
@@ -19,9 +20,11 @@ const fieldLabels: Record<string, string> = {
   email: "E-mail",
   whatsapp: "WhatsApp",
   city: "Cidade",
+  province: "Província",
   delivery_preference: "Entrega preferida",
   amount_reference: "Valor de referência",
   support_type: "Tipo de apoio",
+  support_mode: "Forma de colaboração",
   group_reference: "Rede de referência",
   estimated_people: "Quantidade estimada de pessoas",
   can_coordinate_delivery: "Pode coordenar entrega",
@@ -38,7 +41,7 @@ function displayValue(value: unknown) {
 
 function buildMessage(kind: string, payload: Record<string, unknown>) {
   const title = kindTitles[kind] ?? "Novo envio pelo site";
-  const isStoreMessage = kind === "orders" || kind === "pack_requests";
+  const isStoreMessage = kind === "orders" || kind === "pack_requests" || kind === "sales_point_requests";
   const source = isStoreMessage ? "Loja do Lula" : "Núcleo PT Argentina";
   const lines = Object.entries(payload)
     .filter(([key, value]) => key !== "status" && key !== "product_id" && value !== null && value !== undefined && value !== "")
@@ -52,7 +55,7 @@ function buildMessage(kind: string, payload: Record<string, unknown>) {
 
 export async function sendFormNotification(kind: string, payload: Record<string, unknown>) {
   const apiKey = process.env.RESEND_API_KEY;
-  const isStoreMessage = kind === "orders" || kind === "pack_requests";
+  const isStoreMessage = kind === "orders" || kind === "pack_requests" || kind === "sales_point_requests";
   const recipientList = isStoreMessage
     ? storeTeamEmail
     : process.env.TEAM_EMAIL;

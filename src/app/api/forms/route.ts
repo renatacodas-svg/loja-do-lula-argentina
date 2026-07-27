@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendFormNotification } from "@/lib/email-notifications";
 
-const allowedKinds = new Set(["orders", "pack_requests"]);
+const allowedKinds = new Set(["orders", "pack_requests", "sales_point_requests"]);
 const MAX_ATTEMPTS = 5;
 const WINDOW_MINUTES = 15;
 

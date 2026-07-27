@@ -107,6 +107,26 @@ export default async function LojaPage() {
           </div>
         </section>
 
+        <section id="ponto-de-venda" className="scroll-mt-32 relative overflow-hidden rounded-lg border border-ink/10 bg-white p-6 shadow-sm md:p-8">
+          <div className="loja-diamond absolute -right-16 top-8 h-32 w-48 bg-lulaYellow/70" aria-hidden />
+          <div className="relative grid gap-6 md:grid-cols-[0.68fr_0.32fr] md:items-center">
+            <div>
+              <p className="mb-2 text-sm font-black uppercase text-brasilBlue">Rede da Loja</p>
+              <h2 className="loja-title text-3xl font-black text-ink md:text-4xl">Ponto de venda da Loja do Lula</h2>
+              <div className="mt-4 space-y-4 leading-7 text-zinc-700">
+                <p>Quer ajudar a Loja do Lula a chegar à sua cidade, organização, coletivo, grupo de amigos ou comunidade?</p>
+                <p>Um ponto de venda pode divulgar o catálogo, reunir reservas, organizar compras coletivas e combinar com a equipe a melhor forma de pagamento e entrega.</p>
+                <p>Você não precisa ter estoque próprio. A equipe acompanha o processo e conversa com você sobre uma forma de colaboração possível para o seu local.</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-ink/10 bg-brasilGreen p-5 text-white shadow-sm">
+              <LojaAssetIcon src="/loja-assets/icon-storefront.png" alt="Ponto de venda da Loja do Lula" className="mx-auto mb-4 h-28 w-28" />
+              <p className="text-sm font-bold leading-6 text-white/86">Ajude a aproximar os produtos da Loja de novas cidades, grupos e comunidades.</p>
+              <div className="mt-5"><ButtonLink href="/ponto-de-venda" variant="light">Quero ser ponto de venda</ButtonLink></div>
+            </div>
+          </div>
+        </section>
+
         <section className="mt-8 rounded-lg border border-ink/10 bg-white/70 p-4 text-sm font-bold leading-6 text-zinc-700">
           A equipe da Loja do Lula confirma cada solicitação, a disponibilidade dos produtos, a forma de pagamento e a entrega antes de concluir a compra.
         </section>
